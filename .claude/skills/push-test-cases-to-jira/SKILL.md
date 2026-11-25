@@ -24,7 +24,7 @@ If no Jira key in arguments, ask the user:
 
 ## Step 2 — Obtain Test Cases
 
-**If test cases already exist in this conversation** (a table with columns: Test ID, Title, Preconditions, Test Steps, Expected Result, Priority, Pyramid Layer):
+**If test cases already exist in this conversation** (a table with columns: Test ID, Title, AC Ref, Preconditions, Test Steps, Expected Result, Priority, Pyramid Layer — the `AC Ref` column may be absent on older tables; carry it through when present):
 - Use those test cases directly. Do NOT re-generate.
 - Inform the user: "ใช้ test cases ที่ generate ไว้แล้ว ([N] cases)"
 
@@ -35,6 +35,7 @@ If no Jira key in arguments, ask the user:
 ### Inline Test Case Generation Rules (used only if no existing test cases)
 - Happy paths, negative scenarios (≥40%), boundary value analysis, atomic steps.
 - Tag each case with Pyramid Layer: Unit / Component (BE) / Component (FE) / Integration / E2E / Exploratory.
+- Trace each case to the parent issue's acceptance criteria in an `AC Ref` column (`AC-1`, or `— implicit` / `— gap` when no criterion governs it). If the parent description has no acceptance criteria at all, say so and mark every case `— implicit`.
 - ID format: `TC-F-###` (Functional), `TC-E-###` (Edge), `TC-ERR-###` (Error Handling).
 - Present the table to the user and ask for confirmation before creating in Jira.
 
@@ -59,8 +60,11 @@ For each test case row, create a Jira Subtask with:
 
 **Expected Result:** {Expected Result}
 
+**AC Ref:** {AC Ref}
+
 **Pyramid Layer:** {Pyramid Layer}
 ```
+- Omit the `AC Ref` line entirely when the source table has no such column — never write a placeholder or guess a criterion.
 
 **Priority mapping:**
 - `High` → `High`
